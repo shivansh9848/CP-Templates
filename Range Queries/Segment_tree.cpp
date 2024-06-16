@@ -1,89 +1,86 @@
-// Credits to HealthyUG for the inspiration.
-// Segment Tree with Point Updates and Range Queries
-// Supports multiple Segment Trees with just a change in the Node and Update
-// Very few changes required everytime
+class SegmentTree
+{
+public:
+    vector<int> tree;
+    vector<int> arr;
+    int n;
+    void build(int node, int start, int end)
+    {
+        if (start == end)
+        {
 
-template<typename Node, typename Update>
-struct SegTree {
-	vector<Node> tree;
-	vector<ll> arr; // type may change
-	int n;
-	int s;
-	SegTree(int a_len, vector<ll> &a) { // change if type updated
-		arr = a;
-		n = a_len;
-		s = 1;
-		while(s < 2 * n){
-			s = s << 1;
-		}
-		tree.resize(s); fill(all(tree), Node());
-		build(0, n - 1, 1);
-	}
-	void build(int start, int end, int index)  // Never change this
-	{
-		if (start == end)	{
-			tree[index] = Node(arr[start]);
-			return;
-		}
-		int mid = (start + end) / 2;
-		build(start, mid, 2 * index);
-		build(mid + 1, end, 2 * index + 1);
-		tree[index].merge(tree[2 * index], tree[2 * index + 1]);
-	}
-	void update(int start, int end, int index, int query_index, Update &u)  // Never Change this
-	{
-		if (start == end) {
-			u.apply(tree[index]);
-			return;
-		}
-		int mid = (start + end) / 2;
-		if (mid >= query_index)
-			update(start, mid, 2 * index, query_index, u);
-		else
-			update(mid + 1, end, 2 * index + 1, query_index, u);
-		tree[index].merge(tree[2 * index], tree[2 * index + 1]);
-	}
-	Node query(int start, int end, int index, int left, int right) { // Never change this
-		if (start > right || end < left)
-			return Node();
-		if (start >= left && end <= right)
-			return tree[index];
-		int mid = (start + end) / 2;
-		Node l, r, ans;
-		l = query(start, mid, 2 * index, left, right);
-		r = query(mid + 1, end, 2 * index + 1, left, right);
-		ans.merge(l, r);
-		return ans;
-	}
-	void make_update(int index, ll val) {  // pass in as many parameters as required
-		Update new_update = Update(val); // may change
-		update(0, n - 1, 1, index, new_update);
-	}
-	Node make_query(int left, int right) {
-		return query(0, n - 1, 1, left, right);
-	}
+            tree[node] = arr[start];
+        }
+        else
+        {
+            int mid = (start + end) / 2;
+
+            build(2 * node + 1, start, mid);
+            build(2 * node + 2, mid + 1, end);
+
+            tree[node] = tree[2 * node + 1] + tree[2 * node + 2];
+        }
+    }
+
+    void update(int node, int start, int end, int idx, int val)
+    {
+        if (start == end)
+        {
+
+            arr[idx] = val;
+            tree[node] = val;
+        }
+        else
+        {
+            int mid = (start + end) / 2;
+            if (start <= idx && idx <= mid)
+            {
+
+                update(2 * node + 1, start, mid, idx, val);
+            }
+            else
+            {
+
+                update(2 * node + 2, mid + 1, end, idx, val);
+            }
+
+            tree[node] = tree[2 * node + 1] + tree[2 * node + 2];
+        }
+    }
+
+    int query(int node, int start, int end, int L, int R)
+    {
+        if (R < start || end < L)
+        {
+            return 0;
+        }
+        if (L <= start && end <= R)
+        {
+
+            return tree[node];
+        }
+
+        int mid = (start + end) / 2;
+        int left_sum = query(2 * node + 1, start, mid, L, R);
+        int right_sum = query(2 * node + 2, mid + 1, end, L, R);
+        return left_sum + right_sum;
+    }
+
+    SegmentTree(vector<int> &input)
+    {
+        arr = input;
+        n = arr.size();
+        tree.resize(4 * n);
+        build(0, 0, n - 1);
+    }
+
+    void update(int idx, int val)
+    {
+        update(0, 0, n - 1, idx, val);
+    }
+
+    int query(int L, int R)
+    {
+        return query(0, 0, n - 1, L, R);
+    }
 };
-
-struct Node1 {
-	ll val; // may change
-	Node1() { // Identity element
-		val = 0;	// may change
-	}
-	Node1(ll p1) {  // Actual Node
-		val = p1; // may change
-	}
-	void merge(Node1 &l, Node1 &r) { // Merge two child nodes
-		val = l.val ^ r.val;  // may change
-	}
-};
-
-struct Update1 {
-	ll val; // may change
-	Update1(ll p1) { // Actual Update
-		val = p1; // may change
-	}
-	void apply(Node1 &a) { // apply update to given node
-		a.val = val; // may change
-	}
-};
-
