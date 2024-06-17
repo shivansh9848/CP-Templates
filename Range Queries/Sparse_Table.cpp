@@ -52,11 +52,11 @@ struct SparseTable {
 	}
 };
 struct Node1 {
-	ll val; // store more info if required
+	int val; // store more info if required
 	Node1() { // Identity Element
 		val = 0;
 	}
-	Node1(ll v) {
+	Node1(int v) {
 		val = v;
 	}
 	void merge(Node1 &l, Node1 &r) {
