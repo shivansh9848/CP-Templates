@@ -3,7 +3,7 @@ using namespace std;
 #define ll long long
 #define pb push_back
 #include <bits/stdc++.h>
-// Prims algorithm(to find MST)
+//Dijkstra's algorithm
 
 // Initialize multiset by {0,0}//weight,node,parent
 // Take out from top.If node visited already skip
