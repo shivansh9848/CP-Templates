@@ -9,8 +9,9 @@ using namespace std;
 using namespace __gnu_pbds;
 
 typedef tree<int, null_type, less<int>, rb_tree_tag, tree_order_statistics_node_update> pbds; // find_by_order, order_of_key
-// IF I DECLARE GREATER<INT> THEN ELEMENTS WILL BE ARRANGED IN DECREASING ORDER
-// typedef tree<int, null_type, greater<int>, rb_tree_tag, tree_order_statistics_node_update> pbds; // find_by_order, order_of_key
+// Other types include :
+//  greater<int>(allows to store set in descending order),
+//  less_equal<int>(allows for updates)
 int main()
 {
     pbds A; // declaration
