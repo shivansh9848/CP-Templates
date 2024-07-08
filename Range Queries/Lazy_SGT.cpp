@@ -1,26 +1,34 @@
 
-template<typename Node, typename Update>
-struct LazySGT {
+template <typename Node, typename Update>
+struct LazySGT
+{
     vector<Node> tree;
     vector<bool> lazy;
     vector<Update> updates;
-    vector<ll> arr; // type may change
+    vector<ll> arr;
     int n;
     int s;
-    LazySGT(int a_len, vector<ll> &a) { // change if type updated
+    LazySGT(int a_len, vector<ll> &a)
+    {
         arr = a;
         n = a_len;
         s = 1;
-        while(s < 2 * n){
+        while (s < 2 * n)
+        {
             s = s << 1;
         }
-        tree.resize(s); fill(all(tree), Node());
-        lazy.resize(s); fill(all(lazy), false);
-        updates.resize(s); fill(all(updates), Update());
+        tree.resize(s);
+        fill(all(tree), Node());
+        lazy.resize(s);
+        fill(all(lazy), false);
+        updates.resize(s);
+        fill(all(updates), Update());
         build(0, n - 1, 1);
     }
-    void build(int start, int end, int index) { // Never change this
-        if (start == end)   {
+    void build(int start, int end, int index)
+    {
+        if (start == end)
+        {
             tree[index] = Node(arr[start]);
             return;
         }
@@ -29,8 +37,10 @@ struct LazySGT {
         build(mid + 1, end, 2 * index + 1);
         tree[index].merge(tree[2 * index], tree[2 * index + 1]);
     }
-    void pushdown(int index, int start, int end){
-        if(lazy[index]){
+    void pushdown(int index, int start, int end)
+    {
+        if (lazy[index])
+        {
             int mid = (start + end) / 2;
             apply(2 * index, start, mid, updates[index]);
             apply(2 * index + 1, mid + 1, end, updates[index]);
@@ -38,17 +48,21 @@ struct LazySGT {
             lazy[index] = 0;
         }
     }
-    void apply(int index, int start, int end, Update& u){
-        if(start != end){
+    void apply(int index, int start, int end, Update &u)
+    {
+        if (start != end)
+        {
             lazy[index] = 1;
             updates[index].combine(u, start, end);
         }
         u.apply(tree[index], start, end);
     }
-    void update(int start, int end, int index, int left, int right, Update& u) {  // Never Change this
-        if(start > right || end < left)
+    void update(int start, int end, int index, int left, int right, Update &u)
+    {
+        if (start > right || end < left)
             return;
-        if(start >= left && end <= right){
+        if (start >= left && end <= right)
+        {
             apply(index, start, end, u);
             return;
         }
@@ -58,10 +72,12 @@ struct LazySGT {
         update(mid + 1, end, 2 * index + 1, left, right, u);
         tree[index].merge(tree[2 * index], tree[2 * index + 1]);
     }
-    Node query(int start, int end, int index, int left, int right) { // Never change this
+    Node query(int start, int end, int index, int left, int right)
+    {
         if (start > right || end < left)
             return Node();
-        if (start >= left && end <= right){
+        if (start >= left && end <= right)
+        {
             pushdown(index, start, end);
             return tree[index];
         }
@@ -73,41 +89,52 @@ struct LazySGT {
         ans.merge(l, r);
         return ans;
     }
-    void make_update(int left, int right, ll val) {  // pass in as many parameters as required
-        Update new_update = Update(val); // may change
+    void make_update(int left, int right, ll val)
+    {
+        Update new_update = Update(val);
         update(0, n - 1, 1, left, right, new_update);
     }
-    Node make_query(int left, int right) {
+    Node make_query(int left, int right)
+    {
         return query(0, n - 1, 1, left, right);
     }
 };
 
-struct Node1 {
-    ll val; // may change
-    Node1() { // Identity element
-        val = 0;    // may change
+struct Node1
+{
+    ll val;
+    Node1()
+    {
+        val = 0;
     }
-    Node1(ll p1) {  // Actual Node
-        val = p1; // may change
+    Node1(ll p1)
+    {
+        val = p1;
     }
-    void merge(Node1 &l, Node1 &r) { // Merge two child nodes
-        val = l.val + r.val;  // may change
+    void merge(Node1 &l, Node1 &r)
+    {
+        val = l.val + r.val;
     }
 };
 
-struct Update1 {
-    ll val; // may change
-    Update1(){ // Identity update
+struct Update1
+{
+    ll val;
+    Update1()
+    {
         val = 0;
     }
-    Update1(ll val1) { // Actual Update
+    Update1(ll val1)
+    {
         val = val1;
     }
-    void apply(Node1 &a, int start, int end) { // apply update to given node
-        a.val = val * (end - start + 1); // may change
+    void apply(Node1 &a, int start, int end)
+    {
+        a.val = val * (end - start + 1);
     }
-    void combine(Update1& new_update, int start, int end){
+    void combine(Update1 &new_update, int start, int end)
+    {
         val = new_update.val;
     }
 };
-// auto sg = LazySGT<Node1, Update1>(n, a);
+auto sg = LazySGT<Node1, Update1>(n, a);

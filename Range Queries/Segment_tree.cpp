@@ -3,11 +3,11 @@ template <typename Node, typename Update>
 struct SegTree
 {
     vector<Node> tree;
-    vector<ll> arr; // type may change
+    vector<ll> arr;
     int n;
     int s;
     SegTree(int a_len, vector<ll> &a)
-    { // change if type updated
+    {
         arr = a;
         n = a_len;
         s = 1;
@@ -19,7 +19,7 @@ struct SegTree
         fill(all(tree), Node());
         build(0, n - 1, 1);
     }
-    void build(int start, int end, int index) // Never change this
+    void build(int start, int end, int index)
     {
         if (start == end)
         {
@@ -31,7 +31,7 @@ struct SegTree
         build(mid + 1, end, 2 * index + 1);
         tree[index].merge(tree[2 * index], tree[2 * index + 1]);
     }
-    void update(int start, int end, int index, int query_index, Update &u) // Never Change this
+    void update(int start, int end, int index, int query_index, Update &u)
     {
         if (start == end)
         {
@@ -46,7 +46,7 @@ struct SegTree
         tree[index].merge(tree[2 * index], tree[2 * index + 1]);
     }
     Node query(int start, int end, int index, int left, int right)
-    { // Never change this
+    {
         if (start > right || end < left)
             return Node();
         if (start >= left && end <= right)
@@ -59,8 +59,8 @@ struct SegTree
         return ans;
     }
     void make_update(int index, ll val)
-    {                                    // pass in as many parameters as required
-        Update new_update = Update(val); // may change
+    {
+        Update new_update = Update(val);
         update(0, n - 1, 1, index, new_update);
     }
     Node make_query(int left, int right)
@@ -71,32 +71,32 @@ struct SegTree
 
 struct Node1
 {
-    ll val; // may change
+    ll val;
     Node1()
-    {            // Identity element
-        val = 0; // may change
+    {
+        val = 0;
     }
     Node1(ll p1)
-    {             // Actual Node
-        val = p1; // may change
+    {
+        val = p1;
     }
     void merge(Node1 &l, Node1 &r)
-    {                        // Merge two child nodes
-        val = l.val ^ r.val; // may change
+    {
+        val = l.val ^ r.val;
     }
 };
 
 struct Update1
 {
-    ll val; // may change
+    ll val;
     Update1(ll p1)
-    {             // Actual Update
-        val = p1; // may change
+    {
+        val = p1;
     }
     void apply(Node1 &a)
-    {                // apply update to given node
-        a.val = val; // may change
+    {
+        a.val = val;
     }
 };
 
-// auto sg = SegTree<Node1, Update1>(n, a);
+auto sg = SegTree<Node1, Update1>(n, a);
