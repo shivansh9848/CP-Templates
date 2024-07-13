@@ -16,15 +16,14 @@ vector<int> dijkstra(vector<vector<int>> &vec, int n, int m, int source)
         adj[it[1]].pb({it[2], it[0]});
     }
 
-    // Using priority_queue instead of multiset
     priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
     vector<int> ans(n, INT_MAX);
-    pq.push({0, source}); // weight, node
+    pq.push({0, source});
     ans[source] = 0;
 
     while (!pq.empty())
     {
-        auto [a, b] = pq.top(); // weight, node
+        auto [a, b] = pq.top();
         pq.pop();
 
         for (auto it : adj[b])
@@ -47,15 +46,14 @@ int minimumEffortPath(vector<vector<int>> &v)
     int n = v.size();
     int m = v[0].size();
 
-    // Using priority_queue instead of multiset
     priority_queue<tuple<int, int, int>, vector<tuple<int, int, int>>, greater<tuple<int, int, int>>> pq;
     vector<vector<int>> ans(n, vector<int>(m, INT_MAX));
-    pq.push({0, 0, 0}); // weight, x, y
+    pq.push({0, 0, 0});
     ans[0][0] = 0;
 
     while (!pq.empty())
     {
-        auto [a, b, c] = pq.top(); // weight, x, y
+        auto [a, b, c] = pq.top();
         pq.pop();
 
         for (int i = 0; i < 4; i++)
