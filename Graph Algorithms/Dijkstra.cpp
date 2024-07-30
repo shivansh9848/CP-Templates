@@ -6,7 +6,12 @@ using namespace std;
 #define ff first
 #define ss second
 #define MOD 1000000007
-
+//STEPS
+// 1)Make a distance vector initialized to infinity.Priority Queue is a pair<int,int>{dist,node}
+// 2)Mark dist[source]=0 and push{0,source} to priority_queue;
+// 3)While q.size() Take top element of pq out,pop it out and for its each neighbour 
+// check if expected distance is less than required.
+// if yes update the distance vector and push the {dist,element} in queue  
 vector<int> dijkstra(vector<vector<int>> &vec, int n, int m, int source)
 {
     vector<vector<pair<int, int>>> adj(n);
